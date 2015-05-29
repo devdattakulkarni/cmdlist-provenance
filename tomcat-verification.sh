@@ -1,10 +1,10 @@
 #!/bin/bash
 
-output=`ps -eaf | grep tomcat | awk '{print $1}'`
+output=`ls /var/lib/tomcat*/webapps`
 
 for val in $output
 do
-  if [ $val == 'tomcat7' ]; then
+  if [ $val == 'ROOT' ]; then
     echo "Tomcat installed."
     exit 0
   fi
