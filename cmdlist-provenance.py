@@ -27,6 +27,12 @@ def create_dir(program_name):
     return dir_path
 
 
+def cleanup(program_name):
+    dir_path = "/tmp/{program_name}"
+    dir_path = dir_path.format(program_name=program_name)
+    shutil.rmtree(dir_path)
+
+
 def copy_verification_file(dir_path, verification_script_path):
     verification_file_name = ''
     shutil.copy(verification_script_path, dir_path)
@@ -107,76 +113,74 @@ def check_if_cmd_list_provenance(program_name, cmdlist, dir_path, verification_f
     return docker_run_status
 
 
-if len(sys.argv) < 4 or len(sys.argv) > 4:
-    print "python cmdlist-provenance <program-name> <cmdlist> <path-to-verification-script>"
-    exit(0)
+def find_provenance(program_name, cmdfile, verification_script_path):
+    navigation_cmds = ['cd', 'pushd', 'popd']
+    listing_cmds = ['ls', 'history']
+    viewing_cmds = ['less', 'more']
+    editing_cmds = ['emacs', 'vi']
 
-program_name = sys.argv[1]
-cmdfile = sys.argv[2]
-verification_script_path = sys.argv[3]
+    anchor_cmds = ['apt-get update']
 
+    f = open(cmdfile, 'r')
 
-navigation_cmds = ['cd', 'pushd', 'popd']
-listing_cmds = ['ls', 'history']
-viewing_cmds = ['less', 'more']
-editing_cmds = ['emacs', 'vi']
+    lines_in_file = []
 
-anchor_cmds = ['apt-get update']
+    pattern = '^\d+ '
+    reg = re.compile(pattern)
 
-f = open(cmdfile, 'r')
+    for line in f:
+        line = line.strip()
+        m = reg.match(line)
+        if m is not None:
+            line = line.replace(m.group(0), '')
+            lines_in_file.append(line.strip())
 
-lines_in_file = []
+    print "Lines in file:"
+    print lines_in_file
 
-pattern = '^\d+ '
-reg = re.compile(pattern)
+    dir_path = create_dir(program_name)
+    verification_file_name = copy_verification_file(dir_path, verification_script_path)
 
-for line in f:
-    line = line.strip()
-    m = reg.match(line)
-    if m is not None:
-        line = line.replace(m.group(0), '')
-        lines_in_file.append(line.strip())
+    candidate_list = []
 
-print "Lines in file:"
-print lines_in_file
+    provenance_generated = False
+    end_of_cmds = False
+    while not provenance_generated and not end_of_cmds:
 
-dir_path = create_dir(program_name)
-verification_file_name = copy_verification_file(dir_path, verification_script_path)
+        for l in reversed(lines_in_file):
+            if (not is_filtered_command(l, navigation_cmds) and
+                not is_filtered_command(l, listing_cmds) and
+                not is_filtered_command(l, viewing_cmds) and
+                not is_filtered_command(l, editing_cmds)):
+                candidate_list.append(l)
 
-candidate_list = []
+            if is_filtered_command(l, anchor_cmds):
+               print "Candidate list:"
+               print candidate_list
 
-provenance_generated = False
-end_of_cmds = False
-while not provenance_generated and not end_of_cmds:
+               provenance_generated = check_if_cmd_list_provenance(program_name,
+                                                                   candidate_list,
+                                                                   dir_path,
+                                                                   verification_file_name)
+               if provenance_generated:
+                    print "Provenance found for %s" % program_name
+                    print "Command list:"
+                    for c in reversed(candidate_list):
+                        print c
+                    break
+        end_of_cmds = True
 
-    for l in reversed(lines_in_file):
-        if (not is_filtered_command(l, navigation_cmds) and
-            not is_filtered_command(l, listing_cmds) and
-            not is_filtered_command(l, viewing_cmds) and
-            not is_filtered_command(l, editing_cmds)):
-            candidate_list.append(l)
+    cleanup(program_name)
+    print "done."
 
-        if is_filtered_command(l, anchor_cmds):
-           print "Candidate list:"
-           print candidate_list
-
-           provenance_generated = check_if_cmd_list_provenance(program_name,
-                                                               candidate_list,
-                                                               dir_path,
-                                                               verification_file_name)
-           if provenance_generated:
-                print "Provenance found for %s" % program_name
-                print "Command list:"
-                for c in reversed(candidate_list):
-                    print c
-                break
-    end_of_cmds = True
-
-print "done."
     
-#for l in reversed(lines_in_file):
-#    if l not in listing_cmds:
-#        print l
-#    if not check_if_exists(l, listing_cmds):
-#        print l
-#exit(0)
+if __name__ == "__main__":
+    if len(sys.argv) < 4 or len(sys.argv) > 4:
+        print "python cmdlist-provenance <program-name> <cmdlist> <path-to-verification-script>"
+        exit(0)
+
+    program_name = sys.argv[1]
+    cmdfile = sys.argv[2]
+    verification_script_path = sys.argv[3]
+
+    find_provenance(program_name, cmdfile, verification_script_path)
