@@ -1,0 +1,12 @@
+    1  apt-get upgrade
+    2  apt-get update
+    3  apt-get upgrade
+    4  apt-get -y upgrade
+    5  uname -r
+    6  which wget
+    7  wget -qO- https://get.docker.com/ | sh
+    8  docker -v
+    9  docker
+   10  ifconfig
+   11  history
+   12  history > docker-install-cmd-list
