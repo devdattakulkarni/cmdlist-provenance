@@ -1,0 +1,11 @@
+    1  apt-get upgrade
+    2  apt-get update
+    3  apt-get -y upgrade
+    4  uname -r
+    5  apt-get install -y wget
+    6  wget -v --no-check-certificate https://get.docker.com/
+    7  sh index.html
+    8  docker -v
+    9  docker
+   10  history
+   11  history > docker-install-cmd-list

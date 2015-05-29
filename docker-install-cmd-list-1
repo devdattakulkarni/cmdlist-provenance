@@ -1,0 +1,6 @@
+    1  apt-get upgrade
+    2  apt-get update
+    3  apt-get -y upgrade
+    4  uname -r
+   10  history
+   11  history > docker-install-cmd-list
