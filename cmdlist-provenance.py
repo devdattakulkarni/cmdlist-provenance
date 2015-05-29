@@ -62,15 +62,8 @@ while not provenance_generated:
             not check_if_exists(l, editing_cmds)):
             candidate_list.append(l)
 
-        if (l not in navigation_cmds and
-            l not in listing_cmds and
-            l not in viewing_cmds and
-            l not in editing_cmds):
-             candidate_list.append(l)
-
         if l in anchor_cmds:
            print "Candidate list:"
-           print cand_list
            print candidate_list
 
            provenance_generated = True
