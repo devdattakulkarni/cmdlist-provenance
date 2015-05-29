@@ -1,0 +1,164 @@
+    1  emacs cmdlist-provenance.py
+    2  apt-get install emacs
+    3  emacs cmdlist-provenance.py
+    4  more docker-install-cmd-list 
+    5  more docker-install-cmd-list | awk '{print $3}'
+    6  more docker-install-cmd-list | awk '{print $2}'
+    7  man cut
+    8  more docker-install-cmd-list | awk '{print $2}'
+    9  more docker-install-cmd-list | awk '{print $2 $3}'
+   10  more docker-install-cmd-list | awk '{print $2 ' ' $3}'
+   11  more docker-install-cmd-list | awk '{print $2 " " $3}'
+   12  emacs cmdlist-provenance.py
+   13  python cmdlist-provenance.py docker-install-cmd-list 
+   14  emacs cmdlist-provenance.py
+   15  python cmdlist-provenance.py docker-install-cmd-list 
+   16  emacs cmdlist-provenance.py
+   17  python cmdlist-provenance.py docker-install-cmd-list 
+   18  emacs cmdlist-provenance.py
+   19  python cmdlist-provenance.py docker-install-cmd-list 
+   20  emacs cmdlist-provenance.py
+   21  python cmdlist-provenance.py docker-install-cmd-list
+   22  emacs cmdlist-provenance.py
+   23  python cmdlist-provenance.py docker-install-cmd-list
+   24  emacs cmdlist-provenance.py
+   25  python cmdlist-provenance.py docker-install-cmd-list
+   26  emacs cmdlist-provenance.py
+   27  python cmdlist-provenance.py docker-install-cmd-list
+   28  emacs cmdlist-provenance.py
+   29  python cmdlist-provenance.py docker-install-cmd-list
+   30  emacs cmdlist-provenance.py
+   31  python cmdlist-provenance.py docker-install-cmd-list
+   32  emacs cmdlist-provenance.py
+   33  more cmdlist-provenance.py
+   34  ls *.sh
+   35  cd /tmp/docker/
+   36  ls
+   37  emacs Dockerfile 
+   38  cd ..
+   39  mkdir docker1
+   40  cp docker/Dockerfile docker1/.
+   41  cd docker1
+   42  ls
+   43  more Dockerfile 
+   44  more /root/docker-verification.sh
+   45  emacs /root/docker-verification.sh
+   46  more Dockerfile 
+   47  more /root/docker-verification.sh
+   48  docker build . -t test-docker
+   49  docker build -t test-docker .
+   50  docker images
+   51  docker ps
+   52  cp /root/docker-verification.sh .
+   53  emacs Dockerfile 
+   54  docker rmi 7274f02ff26d
+   55  docker images
+   56  more Dockerfile 
+   57  ls
+   58  docker build -t test-docker-1 .
+   59  docker images
+   60  docker run -t test-docker-1
+   61  cd ..
+   62  cp -r docker1 docker2
+   63  cd docker2
+   64  emacs Dockerfile 
+   65  more Dockerfile 
+   66  ls /root/docker-verification.sh
+   67  docker build -t test-docker-2 .
+   68  docker images
+   69  emacs Dockerfile 
+   70  docker build -t test-docker-2 .
+   71  emacs Dockerfile 
+   72  docker build -t test-docker-2 .
+   73  emacs Dockerfile 
+   74  docker build -t test-docker-2 .
+   75  docker run test-docker-2
+   76  echo $?
+   77  docker run test-docker-1
+   78  echo $?
+   79  history
+   80  more Dockerfile 
+   81  cd ../docker1
+   82  more Dockerfile 
+   83  cd 
+   84  cp docker-install-cmd-list docker-install-cmd-list-new
+   85  python cmdlist-provenance.py 
+   86  ls /tmp/
+   87  python cmdlist-provenance.py docker3 docker-install-cmd-list-new /root/docker-verification.sh
+   88  ls /tmp/
+   89  ls /tmp/docker3
+   90  rm -rf /tmp/docker3
+   91  python cmdlist-provenance.py docker3 docker-install-cmd-list-new /root/docker-verification.sh
+   92  ls  /tmp/docker3
+   93  more /tmp/docker3
+   94  more /tmp/docker3/Dockerfile 
+   95  python cmdlist-provenance.py docker4 docker-install-cmd-list-new /root/docker-verification.sh
+   96  cp docker-install-cmd-list-new docker-install-cmd-list-1
+   97  emacs docker-install-cmd-list-1 
+   98  python cmdlist-provenance.py docker5 docker-install-cmd-list-1 /root/docker-verification.sh
+   99  more /tmp/docker5/Dockerfile 
+  100  more /tmp/docker2/Dockerfile 
+  101  python cmdlist-provenance.py docker6 docker-install-cmd-list-1 /root/docker-verification.sh
+  102  ls /tmp/docker6
+  103  python cmdlist-provenance.py docker7 docker-install-cmd-list-1 /root/docker-verification.sh
+  104  python cmdlist-provenance.py docker8 docker-install-cmd-list-new /root/docker-verification.sh
+  105  python cmdlist-provenance.py docker9 docker-install-cmd-list-new /root/docker-verification.sh
+  106  pushd /tmp/docker9
+  107  docker build -t docker9 .
+  108  popd
+  109  python cmdlist-provenance.py docker10 docker-install-cmd-list-new /root/docker-verification.sh
+  110  python cmdlist-provenance.py docker11 docker-install-cmd-list-new /root/docker-verification.sh
+  111  python cmdlist-provenance.py docker12 docker-install-cmd-list-1 /root/docker-verification.sh
+  112  git status
+  113  git add cmdlist-provenance.py
+  114  git add docker-install-cmd-list-new
+  115  git add docker-install-cmd-list-1
+  116  git status
+  117  git commit
+  118  gig log
+  119  git log
+  120  git config --list
+  121  git push origin1 master
+  122  python cmdlist-provenance.py docker12 docker-install-cmd-list-1 /root/docker-verification.sh
+  123  python cmdlist-provenance.py docker12 docker-install-cmd-list-1
+  124  python cmdlist-provenance.main docker12 docker-install-cmd-list-1
+  125  python cmdlist-provenance.main() docker12 docker-install-cmd-list-1
+  126  python cmdlist-provenance.py docker12 docker-install-cmd-list-1
+  127  python cmdlist-provenance.py docker13 docker-install-cmd-list-1 /root/docker-verification.sh
+  128  ls -ltr /tmp
+  129  python cmdlist-provenance.py docker14 docker-install-cmd-list-1 /root/docker-verification.sh
+  130  ls -ltr /tmp
+  131  python cmdlist-provenance.py docker15 docker-install-cmd-list-1 /root/docker-verification.sh
+  132  python cmdlist-provenance.py docker16 docker-install-cmd-list-1 /root/docker-verification.sh
+  133  ls -l /tmp/
+  134  ls -ltr /tmp/
+  135  git status
+  136  git add cmdlist-provenance.py
+  137  git commit
+  138  git push origin1 master
+  139  emacs README 
+  140  ls -ltr
+  141  git status
+  142  git add docker-verification.sh
+  143  emacs README 
+  144  git add README 
+  145  git status
+  146  git commit
+  147  git push origin1 master
+  148  python cmdlist-provenance.py docker17 docker-install-cmd-list-new /root/docker-verification.sh
+  149  python cmdlist-provenance.py docker18 docker-install-cmd-list-new /root/docker-verification.sh
+  150  python cmdlist-provenance.py docker19 docker-install-cmd-list-1 /root/docker-verification.sh
+  151  python cmdlist-provenance.py docker20 docker-install-cmd-list-1 /root/docker-verification.sh
+  152  python cmdlist-provenance.py docker21 docker-install-cmd-list-1 /root/docker-verification.sh
+  153  ls -ltr /tmp
+  154  python cmdlist-provenance.py docker22 docker-install-cmd-list-new /root/docker-verification.sh
+  155  tomcat
+  156  apt-get update
+  157  apt-get install -y tomcat7
+  158  curl localhost:8080
+  159  tomcat
+  160  ps -eaf | grep tomcat
+  161  ps -eaf | grep tomcat | awk '{print $1}'
+  162  ps -eaf | grep tomcat7 | awk '{print $1}'
+  163  bash tomcat-verification.sh
+  164  history > tomcat-cmds

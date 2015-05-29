@@ -34,7 +34,7 @@ def cleanup(program_name):
 
 
 def copy_verification_file(dir_path, verification_script_path):
-    verification_file_name = ''
+    verification_file_name = verification_script_path
     shutil.copy(verification_script_path, dir_path)
     k = verification_script_path.rfind("/")
     if k >= 0:
@@ -61,14 +61,8 @@ def create_docker_file(dir_path, cmdlist, verification_file_name):
 
 
 def docker_build_and_run(dir_path, program_name):
-    docker_build_run_success = False
-
     current_dir = os.getcwd()
-    print "Current dir:%s" % current_dir
-
     os.chdir(dir_path)
-    new_current_dir = os.getcwd()
-    print "New current dir:%s" % new_current_dir    
 
     image_name = program_name
 
@@ -76,27 +70,33 @@ def docker_build_and_run(dir_path, program_name):
     docker_build_cmd = "docker build -t {image_name} ."
     docker_build_cmd = docker_build_cmd.format(image_name=image_name)
 
+    docker_build_success = False
     try:
         docker_build_output = subprocess.check_output(docker_build_cmd,
                                                       shell=True)
         print "Docker build output:%s" % docker_build_output
+        docker_build_success = True
     except subprocess.CalledProcessError as e:
-        print(e)
+        print "Docker build error: %s" % e
+
+    if not docker_build_success:
+        return docker_build_success
 
     #docker run image_name
     docker_run_cmd = "docker run {image_name}"
     docker_run_cmd = docker_run_cmd.format(image_name=image_name)
 
+    docker_run_success = False
     try:
         docker_run_output = subprocess.check_output(docker_run_cmd, shell=True)
         print "Docker run output:%s" % docker_run_output
-        docker_build_run_success = True
+        docker_run_success = True
     except subprocess.CalledProcessError as e:
-        print(e)
+        print "Docker run error: %s" % e
     
     os.chdir(current_dir)
 
-    return docker_build_run_success
+    return docker_build_success and docker_run_success 
 
 
 def check_if_cmd_list_provenance(program_name, cmdlist, dir_path, verification_file_name):
@@ -115,9 +115,10 @@ def check_if_cmd_list_provenance(program_name, cmdlist, dir_path, verification_f
 
 def find_provenance(program_name, cmdfile, verification_script_path):
     navigation_cmds = ['cd', 'pushd', 'popd']
-    listing_cmds = ['ls', 'history']
+    listing_cmds = ['ls', 'history', 'ps']
     viewing_cmds = ['less', 'more']
     editing_cmds = ['emacs', 'vi']
+    remote_io_cmds = ['git']
 
     anchor_cmds = ['apt-get update']
 
@@ -170,7 +171,7 @@ def find_provenance(program_name, cmdfile, verification_script_path):
                     break
         end_of_cmds = True
 
-    cleanup(program_name)
+    #cleanup(program_name)
     print "done."
 
     
