@@ -116,7 +116,7 @@ def check_if_cmd_list_provenance(program_name, cmdlist, dir_path, verification_f
 def find_provenance(program_name, cmdfile, verification_script_path):
     navigation_cmds = ['cd', 'pushd', 'popd']
     listing_cmds = ['ls', 'history', 'ps']
-    viewing_cmds = ['less', 'more']
+    viewing_cmds = ['less', 'more', 'man']
     editing_cmds = ['emacs', 'vi']
     remote_io_cmds = ['git']
 
@@ -153,6 +153,42 @@ def find_provenance(program_name, cmdfile, verification_script_path):
                 not is_filtered_command(l, listing_cmds) and
                 not is_filtered_command(l, viewing_cmds) and
                 not is_filtered_command(l, editing_cmds)):
+
+                # Even if the command passes all the above filters,
+                # it may fail within docker build because the layer
+                # that we are dealing with may not have that command
+                # installed on it.
+                # A command, such as curl may work on the host because
+                # it is already installed on it. If we just copy that to the candidate_list then
+                # there is a possibility that the docker build will fail. Our main goal is to
+                # not let the docker build fail.
+                # So a strategy we follow is to find out if 'l' is installed on the host.
+                # We can do this using the following command:
+                # dpkg --get-selections | grep -v deinstall | grep tomcat8
+                # If the output is non-empty then we know that host has this package installed.
+                # We add that package to the list of packages to be installed prior to trying
+                # the candidate_list.
+                # Output of the above command might be non-empty but still executing that command
+                # may not be correct -- it may not be a command but a service. If this command
+                # gets added to the Dockerfile then the docker build will fail. One approach to
+                # address this issue is to run the command on host and check if the output contains
+                # a well-known string, such as "command not found:". If so, we don't include the
+                # command in the candidate_list.
+                # How do we deal with file modifications? Would copying the modified file into the
+                # container at the appropriate location be enough?
+                # How do you break up a command such as curl -sSL https://get.docker.com/ubuntu/ | sudo sh
+                # into two? This may be required as we have observed that such piped combined commands
+                # don't seem to work as part of docker's RUN command
+                # One option is to break the command at pipe based redirection to save the output in a file
+                # and then use 'sh' to execute that file.
+                # Certain commands may need one or more flags to be tried on the command line. How do we find
+                # out which flags to use?
+                # Most probably in the vicinity of the command there are similar commands with different flags
+                # We need to find out one of those commands which is really going to work. We could maintain
+                # a similar_command_map which maintains a map of <command, [similar cmd list]> similar commands.
+                # We try each command as part of the 'docker build' and keep the one which works.
+                 
+
                 candidate_list.append(l)
 
             if is_filtered_command(l, anchor_cmds):
