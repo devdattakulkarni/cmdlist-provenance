@@ -1,3 +1,7 @@
 Command List Provenance
+------------------------
+Usage:
+python cmdlist-provenance <program-name> <cmdlist> <path-to-verification-script>
 
-python cmdlist-provenance.py docker-install-cmd-list
+E.g.:
+python cmdlist-provenance.py docker docker-install-cmd-list-new /root/docker-verification.sh
