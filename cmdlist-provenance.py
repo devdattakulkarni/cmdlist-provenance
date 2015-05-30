@@ -118,7 +118,7 @@ def find_provenance(program_name, cmdfile, verification_script_path):
     listing_cmds = ['ls', 'history', 'ps']
     viewing_cmds = ['less', 'more', 'man']
     editing_cmds = ['emacs', 'vi']
-    remote_io_cmds = ['git']
+    #remote_io_cmds = ['git']
 
     anchor_cmds = ['apt-get update']
 
@@ -187,7 +187,19 @@ def find_provenance(program_name, cmdfile, verification_script_path):
                 # We need to find out one of those commands which is really going to work. We could maintain
                 # a similar_command_map which maintains a map of <command, [similar cmd list]> similar commands.
                 # We try each command as part of the 'docker build' and keep the one which works.
-                 
+
+                # Note that we cannot ignore 'git clone' commands as these commands are typically used to download
+                # the required software/package.
+                # Also, cd/pushd/popd commands need to be combined with their immediate successor commands to be
+                # included as part of a single Docker RUN command. Otherwise they won't take effect.
+
+                # What do we do about environment variable setting commands, such as export or variable assignment?
+                # We can set these using ENV command in Dockerfile. 
+
+                # What about variable assignments (such as: pip_command=`which pip`)?
+                
+                # What about file copy commands (such as:
+                # cp /opt/docker-registry/docker_registry/lib/../../config/config_sample.yml /opt/docker-registry/docker_registry/lib/../../config/config.yml
 
                 candidate_list.append(l)
 
